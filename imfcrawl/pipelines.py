@@ -16,11 +16,9 @@ class Taiyingshi_toapi_Pipeline():
         self.__dict__.update(kwargs)
 
     def process_item(self, item, spider):
-        name = item["name"]
-        rate = item["rate"]
-        index_url = item["index_url"]
-        print(name,rate,index_url)
-        requests.post(url=self.api_url, data={"name": name, "rate": rate, "index_url": index_url})
+        movie_name = item["movie_name"]
+        # requests.post(url=self.api_url, data={"name": name, "rate": rate, "index_url": index_url})
+        requests.post(url=self.api_url, data=dict(item.items()))
         return item
 
     @classmethod

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from imfcrawl import items
 from scrapy.http import Request
 
 class TaiyingshiSpider(scrapy.Spider):
@@ -37,6 +38,7 @@ class TaiyingshiSpider(scrapy.Spider):
         # yield Request(url=next_page_url,method="GET",callback=self.parse)
 
     def movie_page_parse(self,response):
+        obj = items.Taiyingshi_movie_Item()
         movie_name = response.xpath("//div[@id='title']/h1/text()").extract_first()
         movie_director_list = response.xpath("//div[@id='director']/em//a/text()").extract() or []
         movie_actor_list = response.xpath("//div[@id='actor']/em//a/text()").extract() or []
@@ -51,10 +53,7 @@ class TaiyingshiSpider(scrapy.Spider):
         movie_douban_link = response.xpath("//span[@id='douban']/parent::a/@href").extract_first() or None
         movie_rate_imdb = response.xpath("//span[@id='imdb']/parent::a/following-sibling::span/text()").extract_first() or None
         movie_imdb_link = response.xpath("//span[@id='imdb']/parent::a/@href").extract_first() or None
-        print(movie_name)
-
         movie_download_list = []
-
         movie_download_baidu_box = response.xpath("//div[@class='res']")[0]
         for item in movie_download_baidu_box.xpath(".//td[@class='link']"):
             link = item.xpath("./a/@href").extract_first()
@@ -72,10 +71,25 @@ class TaiyingshiSpider(scrapy.Spider):
             movie_download_list.append("迅雷 {}".format(xunlei_link))
             movie_download_list.append("小米 {}".format(xiaomi_link))
 
+        obj["movie_name"] = movie_name
+        obj["movie_url"] = response.url
+        obj["movie_director_list"] = movie_director_list
+        obj["movie_actor_list"] = movie_actor_list
+        obj["movie_type_list"] = movie_type_list
+        obj["movie_district"] = movie_district
+        obj["movie_year"] = movie_year
+        obj["movie_language_list"] = movie_language_list
+        obj["movie_length"] = movie_length
+        obj["movie_rate_douban"] = movie_rate_douban
+        obj["movie_douban_link"] = movie_douban_link
+        obj["movie_rate_imdb"] = movie_rate_imdb
+        obj["movie_imdb_link"] = movie_imdb_link
+        obj["movie_download_list"] = movie_download_list
+        yield obj
 
-        recommend_movie_url_list = response.xpath("//div[@id='recommends']/div[@class='b-content']//a/@href").extract()
-        for recommend_movie_url in recommend_movie_url_list:
-            yield Request(url=recommend_movie_url,method="GET",callback=self.movie_page_parse)
-            break
+        # recommend_movie_url_list = response.xpath("//div[@id='recommends']/div[@class='b-content']//a/@href").extract()
+        # for recommend_movie_url in recommend_movie_url_list:
+        #     yield Request(url=recommend_movie_url,method="GET",callback=self.movie_page_parse)
+        #     break
 
 
