@@ -2,6 +2,7 @@
 import scrapy
 from imfcrawl import items
 from scrapy.http import Request
+from scrapy.http import Response
 
 class TaiyingshiSpider(scrapy.Spider):
     name = 'taiyingshi'
@@ -12,7 +13,7 @@ class TaiyingshiSpider(scrapy.Spider):
             "imfcrawl.pipelines.Taiyingshi_toapi_Pipeline":333,
         },
         "DOWNLOAD_DELAY": 3,
-        "API_URL": "http://127.0.0.1:8000/taiyingshi/api/taiyingshi/",
+        "API_URL": "http://127.0.0.1:8000/taiyingshi/api/movie/",
     }
 
 
@@ -29,9 +30,11 @@ class TaiyingshiSpider(scrapy.Spider):
             # obj['index_url'] = movie_index_url
             # print(movie_name,movie_rating,movie_index_url)
             # yield obj
-            if n == 5:
-                yield Request(url=movie_index_url,method="GET",callback=self.movie_page_parse)
-                break
+            # if n == 5:
+            #     yield Request(url=movie_index_url,method="GET",callback=self.movie_page_parse)
+            #     break
+            yield Request(url=movie_index_url, method="GET", callback=self.movie_page_parse)
+            # break
             n += 1
 
         # next_page_url = response.xpath("//a[@class='down near']/@href").extract_first()
@@ -61,7 +64,7 @@ class TaiyingshiSpider(scrapy.Spider):
             movie_download_list.append("百度网盘 {} {}".format(link,password))
 
         movie_download_others_box = response.xpath("//div[@class='res']")[1]
-        for item in movie_download_others_box.xpath(".//li"):
+        for item in movie_download_others_box.xpath(".//li[not(@class='fres')]"):
             movie_download_list.append("\n")
             item_title = item.xpath(".//span[@class='type-show']/text()").extract_first()
             item_link = item.xpath(".//td[@class='link']/a/@href").extract_first()

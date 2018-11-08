@@ -16,7 +16,7 @@ class ImfcrawlItem(scrapy.Item):
 
 class Taiyingshi_movie_Item(scrapy.Item):
     movie_name = scrapy.Field()
-    mivie_url = scrapy.Field()
+    movie_url = scrapy.Field()
     movie_director_list = scrapy.Field()
     movie_actor_list = scrapy.Field()
     movie_type_list = scrapy.Field()

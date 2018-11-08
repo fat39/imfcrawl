@@ -17,6 +17,7 @@ class Taiyingshi_toapi_Pipeline():
 
     def process_item(self, item, spider):
         movie_name = item["movie_name"]
+        print(dict(item.items()))
         # requests.post(url=self.api_url, data={"name": name, "rate": rate, "index_url": index_url})
         requests.post(url=self.api_url, data=dict(item.items()))
         return item
