@@ -88,3 +88,15 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
+
+
+PROXIES = [
+    "http://123.127.217.170:80",
+    "http://223.202.204.195:80",
+    "http://223.202.204.194:80",
+    "http://140.143.105.246:80",
+]
+
+
