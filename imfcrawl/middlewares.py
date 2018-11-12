@@ -135,8 +135,8 @@ import time
 
 class RandomDelayMiddleware(object):
     def __init__(self,crawler):
-        self.api_url = crawler.spider.settings.get("API_URL")
-        self.delay = crawler.spider.settings.get("RANDOM_DELAY")
+        self.api_url = crawler.spider.settings.get("API_URL")  # 略
+        self.delay = crawler.spider.settings.get("RANDOM_DELAY")  # 在settings上设置一个delay最大值
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -145,7 +145,7 @@ class RandomDelayMiddleware(object):
     def process_request(self, request, spider):
         # print(request.url)
         if request.url == self.api_url:
-            # delay = random.randint(0, self.delay)
-            # logging.debug("### random delay: %s s ###" % delay)
-            # time.sleep(delay)
-            time.sleep(0.5)
+            delay = random.randint(0, self.delay)
+            logging.debug("### random delay: %s s ###" % delay)
+            time.sleep(delay)  # 随机延迟
+            # time.sleep(0.5)  # 固定延迟

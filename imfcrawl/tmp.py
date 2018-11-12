@@ -44,25 +44,21 @@
 # dir = r"D:\临时\爬虫\scrapy\taiyingshi"
 # dir_walk = os.walk(dir)
 #
+# file_name_list = next(dir_walk)[2]
 # for file_name in next(dir_walk)[2]:
 #     file_path = os.path.join(dir,file_name)
 #     res = json.load(open(file_path))
 #     print(type(res),res)
 
-def md5(val):
-    import hashlib
-    ha = hashlib.sha1()
-    ha.update(bytes(val, encoding='utf-8'))
-    key = ha.hexdigest()
-    print(key)
-    return key
 
-def test(val):
-    import hashlib
-    key = hashlib.sha1(bytes(val,encoding="utf-8")).hexdigest()
-    print(key)
-    return key
 
-v = "adfasdfakdsfjlasjdfkladjsf:///asdfasddf.com"
-md5(v)
-test(v)
+
+url = "http://www.taiyingshi.com/movie/xz151497.html"
+
+import requests
+from scrapy.selector import Selector
+
+htm = requests.get(url)
+
+from scrapy.settings import default_settings
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
