@@ -101,3 +101,51 @@ class ImfcrawlDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+import random
+class ProxyMiddleware(object):
+    '''
+    设置Proxy
+    '''
+
+    def __init__(self, ip):
+        self.ip = ip
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(ip=crawler.settings.get('PROXIES'))
+
+    def process_request(self, request, spider):
+        try:
+            proxy_ip = random.choice(self.ip)
+        except:
+            proxy_ip = None
+
+        if proxy_ip:
+            # print(proxy_ip)
+            request.meta['proxy'] = proxy_ip
+
+
+
+import logging
+import random
+import time
+
+
+class RandomDelayMiddleware(object):
+    def __init__(self,crawler):
+        self.api_url = crawler.spider.settings.get("API_URL")  # 略
+        self.delay = crawler.spider.settings.get("RANDOM_DELAY")  # 在settings上设置一个delay最大值
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def process_request(self, request, spider):
+        # print(request.url)
+        if request.url == self.api_url:
+            delay = random.randint(0, self.delay)
+            logging.debug("### random delay: %s s ###" % delay)
+            time.sleep(delay)  # 随机延迟
+            # time.sleep(0.5)  # 固定延迟
